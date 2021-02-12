@@ -23,11 +23,26 @@ register: async (req, res)=>{
     return res.status(201).send(req.session.user)
 },
 
+login: async (req, res)=>{
+const {username, password} = req.body
+dbInstance = req.app.get('db')
+const foundUser = await req.app.get('db').get_user([username]); //async and await question
+const user = foundUser[0]
+if(!user){
+    res.status(401).send('User not found. Please register as a new user before logging in')
+} 
+const isAuthenticated =  bcrypt.compareSync(password, user.hash)
+if(!isAuthenticated){
+    res.status(403).send('Incorreeeect password!')
+}
+req.session.user = {
+    isAdmin: user.isAdmin,
+    username: user.username, 
+    id: user.id
+}
+return res.send(req.session.user)
 
-
-
-
-
+}
 
 
 }
