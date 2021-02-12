@@ -74,6 +74,13 @@ Now try logging in with a registered user, but use an incorrect password. You sh
 
   logout() {
     // axios GET to /auth/logout here
+  axios
+  .get('/auth/logout')
+  .then(()=> {
+  this.props.updateUser({})
+  })
+  .catch(err => console.log(err))    
+
   }
 
   render() {
